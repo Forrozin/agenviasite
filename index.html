@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenvia — Agentes de Inteligência Artificial para Empresas</title>
+<meta name="description" content="Agenvia — A via inteligente para o seu negócio. Automatizamos prospecção, atendimento e gestão com agentes de IA. Pacotes Bronze, Prata e Ouro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f5f2ec;
+    --paper-dark: #ede9e1;
+    --accent: #d4500a;
+    --accent-light: #f26a1f;
+    --muted: #7a7060;
+    --line: rgba(15,15,15,0.12);
+    --white: #ffffff;
+    --bronze: #c8924a;
+    --silver: #8a9ba8;
+    --gold: #c5a84b;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 4rem;
+    background: rgba(245,242,236,0.94); backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(15,15,15,0.06);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  nav.scrolled { border-bottom-color: rgba(15,15,15,0.12); box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .nav-logo { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta { background: var(--accent); color: var(--white) !important; padding: 0.6rem 1.4rem; border-radius: 2px; transition: background 0.2s !important; }
+  .nav-cta:hover { background: var(--accent-light) !important; }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; padding-top: 5rem; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -20%; right: -10%; width: 60vw; height: 80vh; background: radial-gradient(ellipse at center, rgba(212,80,10,0.07) 0%, transparent 70%); pointer-events: none; }
+  .hero-left { display: flex; flex-direction: column; justify-content: center; padding: 6rem 4rem; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.75rem; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-eyebrow::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); }
+  .hero-headline { font-family: 'Fraunces', serif; font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-headline em { font-style: italic; color: var(--accent); }
+  .hero-sub { font-size: 1.05rem; font-weight: 300; line-height: 1.75; color: var(--muted); max-width: 480px; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.6s 0.4s ease both; }
+  .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--white); padding: 0.9rem 2rem; font-size: 0.9rem; font-weight: 500; text-decoration: none; border-radius: 2px; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; }
+  .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,80,10,0.3); }
+  .btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; background: transparent; color: var(--ink); padding: 0.9rem 2rem; font-size: 0.9rem; font-weight: 500; text-decoration: none; border: 1px solid var(--line); border-radius: 2px; transition: border-color 0.2s, transform 0.2s; }
+  .btn-secondary:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .hero-stats { display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); opacity: 0; animation: fadeUp 0.6s 0.5s ease both; }
+  .stat-num { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 600; line-height: 1; color: var(--ink); }
+  .stat-label { font-size: 0.75rem; font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); margin-top: 0.3rem; }
+  .hero-right { display: flex; align-items: center; justify-content: center; padding: 6rem 4rem 6rem 2rem; }
+  .hero-visual { width: 100%; max-width: 460px; background: var(--ink); border-radius: 6px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.22), 0 0 0 1px rgba(255,255,255,0.04); opacity: 0; animation: fadeUp 0.8s 0.3s ease both; }
+  .visual-header { background: #1a1a1a; padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; } .dot-y { background: #febc2e; } .dot-g { background: #28c840; }
+  .visual-title { font-size: 0.7rem; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; margin-left: auto; }
+  .visual-body { padding: 1.5rem; }
+  .chat-msg { display: flex; gap: 0.75rem; margin-bottom: 1.25rem; animation: fadeUp 0.5s ease both; }
+  .chat-msg:nth-child(1){animation-delay:.5s} .chat-msg:nth-child(2){animation-delay:1s} .chat-msg:nth-child(3){animation-delay:1.5s} .chat-msg:nth-child(4){animation-delay:2s} .chat-msg:nth-child(5){animation-delay:2.5s} .chat-msg:nth-child(6){animation-delay:3s}
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600; flex-shrink: 0; margin-top: 2px; }
+  .av-user { background: #2a2a2a; color: rgba(255,255,255,0.5); } .av-bot { background: var(--accent); color: var(--white); }
+  .bubble { padding: 0.6rem 0.9rem; border-radius: 2px; font-size: 0.78rem; line-height: 1.5; max-width: 85%; }
+  .bubble-user { background: #2a2a2a; color: rgba(255,255,255,0.75); } .bubble-bot { background: #1e1e1e; color: rgba(255,255,255,0.85); }
+  .bubble-highlight { color: var(--accent-light); font-weight: 500; }
+  .typing { display: flex; gap: 4px; padding: 0.75rem 0.9rem; background: #1e1e1e; border-radius: 2px; width: fit-content; }
+  .typing span { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); animation: blink 1.4s infinite; }
+  .typing span:nth-child(2){animation-delay:.2s} .typing span:nth-child(3){animation-delay:.4s}
+  @keyframes blink { 0%,80%,100%{opacity:.3} 40%{opacity:1} }
+  .visual-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; align-items: center; gap: 0.5rem; }
+  .input-fake { flex: 1; background: #1a1a1a; border: 1px solid rgba(255,255,255,0.08); border-radius: 2px; padding: 0.5rem 0.75rem; font-size: 0.72rem; color: rgba(255,255,255,0.25); font-family: 'DM Sans', sans-serif; }
+  .send-btn { background: var(--accent); border: none; border-radius: 2px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .send-btn svg { width: 12px; height: 12px; fill: white; }
+
+  /* SHARED */
+  .section-divider { height: 1px; background: var(--line); margin: 0 4rem; }
+  .logos-section { padding: 3rem 4rem; display: flex; align-items: center; gap: 2rem; flex-wrap: wrap; }
+  .logos-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .logos-list { display: flex; gap: 2.5rem; align-items: center; flex-wrap: wrap; }
+  .logo-badge { font-family: 'Fraunces', serif; font-size: 0.95rem; font-weight: 600; color: rgba(15,15,15,0.3); letter-spacing: -0.01em; transition: color 0.2s; }
+  .logo-badge:hover { color: rgba(15,15,15,0.6); }
+  .section-tag { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+  .section-tag::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent); }
+  .section-title { font-family: 'Fraunces', serif; font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; line-height: 1.15; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 1rem; }
+  .section-title em { font-style: italic; color: var(--accent); }
+  .section-sub { font-size: 1rem; font-weight: 300; line-height: 1.7; color: var(--muted); max-width: 560px; margin-bottom: 4rem; }
+
+  /* SERVICES */
+  .services { padding: 6rem 4rem; background: var(--paper-dark); }
+  .levels-grid { display: flex; flex-direction: column; gap: 2rem; }
+  .level { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--white); transition: box-shadow 0.3s; }
+  .level:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
+  .level-header { display: grid; grid-template-columns: 280px 1fr; align-items: stretch; border-bottom: 1px solid var(--line); }
+  .level-num { padding: 1.5rem 2rem; border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: center; }
+  .level-badge { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+  .level-name { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); }
+  .level-desc { padding: 1.5rem 2rem; font-size: 0.875rem; font-weight: 300; line-height: 1.6; color: var(--muted); display: flex; align-items: center; }
+  .services-grid { display: grid; grid-template-columns: repeat(3,1fr); }
+  .service-item { padding: 1.75rem 2rem; border-right: 1px solid var(--line); transition: background 0.2s; }
+  .service-item:last-child { border-right: none; }
+  .service-item:hover { background: rgba(212,80,10,0.03); }
+  .service-icon { font-size: 1.4rem; margin-bottom: 0.75rem; display: block; }
+  .service-name { font-size: 0.9rem; font-weight: 500; color: var(--ink); margin-bottom: 0.4rem; line-height: 1.3; }
+  .service-desc { font-size: 0.78rem; font-weight: 300; line-height: 1.6; color: var(--muted); }
+
+  /* COMPARE */
+  .compare { padding: 6rem 4rem; }
+  .compare-wrap { overflow-x: auto; margin-top: 3rem; }
+  .compare-table { width: 100%; border-collapse: collapse; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; min-width: 700px; }
+  .compare-table th { padding: 1rem 1.5rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; text-align: left; background: var(--ink); color: rgba(255,255,255,0.5); border-right: 1px solid rgba(255,255,255,0.08); }
+  .compare-table th.col-main { color: var(--white); }
+  .compare-table th.col-highlight { background: var(--accent); color: var(--white); }
+  .compare-table td { padding: 1rem 1.5rem; font-size: 0.85rem; line-height: 1.5; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: var(--muted); }
+  .compare-table td:first-child { font-weight: 500; color: var(--ink); }
+  .compare-table td.col-highlight { background: rgba(212,80,10,0.03); }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(0,0,0,0.015); }
+  .compare-table tr:hover td.col-highlight { background: rgba(212,80,10,0.05); }
+  .check { color: #22c55e; } .cross { color: #ef4444; } .partial { color: var(--bronze); font-size: 0.8rem; font-weight: 500; }
+
+  /* PACKAGES */
+  .packages { padding: 6rem 4rem; background: var(--paper-dark); }
+  .packages-header { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+  .packages-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .package-card { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--white); position: relative; transition: transform 0.25s, box-shadow 0.25s; display: flex; flex-direction: column; }
+  .package-card:hover { transform: translateY(-5px); box-shadow: 0 24px 48px rgba(0,0,0,0.1); }
+  .package-card.featured { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .package-card.featured:hover { box-shadow: 0 0 0 1px var(--accent), 0 24px 48px rgba(212,80,10,0.15); }
+  .pkg-tag { position: absolute; top: 1.25rem; right: 1.25rem; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; background: var(--accent); color: var(--white); padding: 0.25rem 0.6rem; border-radius: 2px; }
+  .pkg-tier { display: flex; align-items: center; gap: 0.75rem; padding: 1.75rem 1.75rem 0; }
+  .tier-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .tier-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+  .pkg-name { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; padding: 0.5rem 1.75rem 0; color: var(--ink); }
+  .pkg-case { font-size: 0.72rem; font-weight: 400; color: var(--muted); padding: 0.25rem 1.75rem 0; font-style: italic; }
+  .pkg-price { padding: 1.5rem 1.75rem; border-bottom: 1px solid var(--line); }
+  .price-from { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.25rem; }
+  .price-val { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; line-height: 1; }
+  .price-period { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+  .price-setup { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; }
+  .price-setup strong { color: var(--ink); }
+  .pkg-features { padding: 1.5rem 1.75rem; flex: 1; list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .pkg-features li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.8rem; line-height: 1.5; color: var(--muted); }
+  .pkg-features li::before { content: '→'; color: var(--accent); font-size: 0.7rem; flex-shrink: 0; margin-top: 0.1em; }
+  .pkg-cta { padding: 1.5rem 1.75rem; border-top: 1px solid var(--line); }
+  .pkg-btn { display: block; text-align: center; padding: 0.8rem; font-size: 0.85rem; font-weight: 500; text-decoration: none; border-radius: 2px; transition: all 0.2s; }
+  .pkg-btn-outline { border: 1px solid var(--line); color: var(--ink); }
+  .pkg-btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .pkg-btn-filled { background: var(--accent); color: var(--white); }
+  .pkg-btn-filled:hover { background: var(--accent-light); }
+
+  /* HOW */
+  .how { padding: 6rem 4rem; background: var(--ink); color: var(--white); }
+  .how .section-tag { color: var(--accent-light); }
+  .how .section-tag::before { background: var(--accent-light); }
+  .how .section-title { color: var(--white); }
+  .how .section-sub { color: rgba(255,255,255,0.5); }
+  .steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .step { background: var(--ink); padding: 2.5rem 2rem; transition: background 0.2s; }
+  .step:hover { background: #191919; }
+  .step-num { font-family: 'Fraunces', serif; font-size: 3rem; font-weight: 600; color: rgba(255,255,255,0.05); line-height: 1; margin-bottom: 1.5rem; }
+  .step-icon { font-size: 1.5rem; margin-bottom: 1rem; display: block; }
+  .step-title { font-size: 0.95rem; font-weight: 500; color: rgba(255,255,255,0.9); margin-bottom: 0.5rem; }
+  .step-desc { font-size: 0.8rem; font-weight: 300; line-height: 1.6; color: rgba(255,255,255,0.45); }
+
+  /* GUARANTEE */
+  .guarantee { padding: 5rem 4rem; }
+  .guarantee-inner { border: 1px solid var(--line); border-radius: 4px; background: var(--white); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 3rem; padding: 3rem 4rem; }
+  .guarantee-badge { width: 80px; height: 80px; border-radius: 50%; background: var(--accent); color: var(--white); display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Fraunces', serif; text-align: center; flex-shrink: 0; }
+  .guarantee-badge .days { font-size: 1.8rem; font-weight: 600; line-height: 1; }
+  .guarantee-badge .days-label { font-size: 0.55rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.85; }
+  .guarantee-text h3 { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 0.5rem; }
+  .guarantee-text p { font-size: 0.9rem; font-weight: 300; line-height: 1.7; color: var(--muted); }
+  .guarantee-cta { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--white); padding: 0.9rem 1.75rem; font-size: 0.85rem; font-weight: 500; text-decoration: none; border-radius: 2px; white-space: nowrap; transition: background 0.2s, transform 0.2s, box-shadow 0.2s; flex-shrink: 0; }
+  .guarantee-cta:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,80,10,0.25); }
+
+  /* CASES */
+  .cases { padding: 6rem 4rem; background: var(--paper-dark); }
+  .cases-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 3rem; }
+  .case-card { border: 1px solid var(--line); border-radius: 4px; padding: 2rem; background: var(--white); position: relative; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; }
+  .case-card:hover { transform: translateY(-3px); box-shadow: 0 16px 32px rgba(0,0,0,0.07); }
+  .case-card::before { content: '"'; font-family: 'Fraunces', serif; font-size: 8rem; color: rgba(212,80,10,0.05); position: absolute; top: -1rem; left: 1rem; line-height: 1; pointer-events: none; }
+  .case-quote { font-size: 0.875rem; line-height: 1.7; color: var(--muted); margin-bottom: 1.5rem; position: relative; z-index: 1; }
+  .case-divider { height: 1px; background: var(--line); margin-bottom: 1.5rem; }
+  .case-client { display: flex; align-items: center; gap: 0.75rem; }
+  .case-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--paper-dark); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+  .case-name { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
+  .case-role { font-size: 0.72rem; color: var(--muted); margin-top: 0.1rem; }
+  .case-pkg { margin-left: auto; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.6rem; border-radius: 2px; }
+
+  /* FAQ */
+  .faq { padding: 6rem 4rem; }
+  .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 3rem; }
+  .faq-item { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; background: var(--white); transition: box-shadow 0.2s; }
+  .faq-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+  .faq-question { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: var(--ink); line-height: 1.4; gap: 1rem; user-select: none; }
+  .faq-question:hover { background: rgba(212,80,10,0.02); }
+  .faq-icon { width: 20px; height: 20px; border-radius: 50%; background: var(--paper-dark); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; transition: transform 0.3s, background 0.2s; color: var(--accent); }
+  .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--accent); color: var(--white); }
+  .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.35s ease, padding 0.3s ease; padding: 0 1.5rem; font-size: 0.85rem; font-weight: 300; line-height: 1.75; color: var(--muted); }
+  .faq-item.open .faq-answer { max-height: 200px; padding: 0 1.5rem 1.25rem; }
+  .faq-sep { height: 1px; background: var(--line); margin: 0 1.5rem; display: none; }
+  .faq-item.open .faq-sep { display: block; }
+
+  /* TECH */
+  .tech { padding: 4rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 4rem; }
+  .tech-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; min-width: 120px; }
+  .tech-items { display: flex; gap: 2rem; flex-wrap: wrap; align-items: center; }
+  .tech-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 500; color: rgba(15,15,15,0.5); padding: 0.4rem 0.9rem; border: 1px solid var(--line); border-radius: 2px; transition: all 0.2s; }
+  .tech-item:hover { border-color: var(--ink); color: var(--ink); }
+
+  /* FINAL CTA */
+  .final-cta { padding: 8rem 4rem; text-align: center; position: relative; overflow: hidden; }
+  .final-cta::before { content: ''; position: absolute; bottom: -30%; left: 50%; transform: translateX(-50%); width: 80vw; height: 60vh; background: radial-gradient(ellipse at center, rgba(212,80,10,0.07) 0%, transparent 65%); pointer-events: none; }
+  .cta-headline { font-family: 'Fraunces', serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; letter-spacing: -0.03em; color: var(--ink); max-width: 700px; margin: 0 auto 1.5rem; }
+  .cta-headline em { font-style: italic; color: var(--accent); }
+  .cta-sub { font-size: 1rem; font-weight: 300; color: var(--muted); line-height: 1.7; max-width: 480px; margin: 0 auto 3rem; }
+  .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-whatsapp { display: inline-flex; align-items: center; gap: 0.6rem; background: #25D366; color: var(--white); padding: 0.9rem 2rem; font-size: 0.9rem; font-weight: 500; text-decoration: none; border-radius: 2px; transition: all 0.2s; }
+  .btn-whatsapp:hover { background: #20bf5a; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,211,102,0.3); }
+
+  /* WHATSAPP FLOAT */
+  .wa-float { position: fixed; bottom: 2rem; right: 2rem; z-index: 99; display: flex; align-items: center; gap: 0.75rem; background: #25D366; color: var(--white); padding: 0.75rem 1.25rem 0.75rem 0.9rem; border-radius: 50px; text-decoration: none; font-size: 0.85rem; font-weight: 500; box-shadow: 0 8px 24px rgba(37,211,102,0.4); transition: transform 0.2s, box-shadow 0.2s, padding 0.3s, border-radius 0.3s; animation: fadeUp 0.6s 1s ease both; opacity: 0; }
+  .wa-float:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(37,211,102,0.5); }
+  .wa-float-text { white-space: nowrap; overflow: hidden; max-width: 150px; transition: max-width 0.3s, opacity 0.3s; }
+  .wa-float.compact { padding: 0.85rem; border-radius: 50%; }
+  .wa-float.compact .wa-float-text { max-width: 0; opacity: 0; }
+
+  /* FOOTER */
+  footer { padding: 3rem 4rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+  .footer-logo { font-family: 'Fraunces', serif; font-size: 1.1rem; font-weight: 600; color: var(--ink); text-decoration: none; }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy { font-size: 0.75rem; color: var(--muted); }
+  .footer-links { display: flex; gap: 2rem; list-style: none; }
+  .footer-links a { font-size: 0.78rem; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--ink); }
+
+  /* REVEAL */
+  [data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1); }
+  [data-reveal].visible { opacity: 1; transform: translateY(0); }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-right { display: none; }
+    .hero-left { padding: 7rem 1.5rem 4rem; }
+    .hero-stats { gap: 2rem; }
+    .section-divider { margin: 0 1.5rem; }
+    .logos-section { padding: 2rem 1.5rem; }
+    .services,.compare,.packages,.how,.guarantee,.cases,.faq,.final-cta { padding: 4rem 1.5rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service-item { border-right: none; border-bottom: 1px solid var(--line); }
+    .service-item:last-child { border-bottom: none; }
+    .level-header { grid-template-columns: 1fr; }
+    .level-num { border-right: none; border-bottom: 1px solid var(--line); }
+    .packages-header { grid-template-columns: 1fr; gap: 1.5rem; }
+    .packages-grid { grid-template-columns: 1fr; }
+    .steps-grid { grid-template-columns: 1fr 1fr; }
+    .guarantee-inner { grid-template-columns: 1fr; text-align: center; gap: 1.5rem; padding: 2rem; }
+    .guarantee-badge { margin: 0 auto; }
+    .cases-grid { grid-template-columns: 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .tech { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+    .wa-float.compact, .wa-float { padding: 0.85rem; border-radius: 50%; }
+    .wa-float .wa-float-text { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- FLOAT WA -->
+<a href="https://wa.me/5551995090036?text=Olá! Gostaria de saber mais sobre a Agenvia" class="wa-float" id="waFloat" aria-label="Falar no WhatsApp">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  <span class="wa-float-text">Falar no WhatsApp</span>
+</a>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Agen<span>via</span></a>
+  <ul class="nav-links">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#pacotes">Pacotes</a></li>
+    <li><a href="#cases">Referências</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="https://wa.me/5551995090036?text=Olá! Gostaria de fazer um diagnóstico gratuito" class="nav-cta">Diagnóstico grátis</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <span class="hero-eyebrow">Agenvia · A via inteligente para o seu negócio</span>
+    <h1 class="hero-headline">Sua empresa<br>trabalhando <em>24 horas</em><br>sem parar.</h1>
+    <p class="hero-sub">Automatizamos prospecção, atendimento e gestão com agentes de inteligência artificial. Seu time foca no que importa — o agente cuida do resto.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/5551995090036?text=Olá! Gostaria de fazer um diagnóstico gratuito" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Diagnóstico gratuito agora
+      </a>
+      <a href="#pacotes" class="btn-secondary">Ver pacotes →</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">9+</div><div class="stat-label">Tipos de agentes</div></div>
+      <div><div class="stat-num">24h</div><div class="stat-label">Operando sem parar</div></div>
+      <div><div class="stat-num">3</div><div class="stat-label">Pacotes disponíveis</div></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-visual">
+      <div class="visual-header">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="visual-title">Agenvia · Triagem Ativa</span>
+      </div>
+      <div class="visual-body">
+        <div class="chat-msg"><div class="avatar av-user">CL</div><div class="bubble bubble-user">Oi, quanto custa o serviço de vocês?</div></div>
+        <div class="chat-msg"><div class="avatar av-bot">AV</div><div class="bubble bubble-bot">Olá! Temos <span class="bubble-highlight">3 pacotes</span> a partir de R$800/mês. Antes de passar os detalhes, me conta: sua empresa faz quantos atendimentos por dia?</div></div>
+        <div class="chat-msg"><div class="avatar av-user">CL</div><div class="bubble bubble-user">Umas 30 por dia, mas só 2 funcionários</div></div>
+        <div class="chat-msg"><div class="avatar av-bot">AV</div><div class="bubble bubble-bot">Perfeito! Para o seu volume, o <span class="bubble-highlight">Pacote Prata</span> seria ideal — automatizo os primeiros 5 min de cada conversa e já agendo reuniões. Posso te conectar com um especialista?</div></div>
+        <div class="chat-msg"><div class="avatar av-user">CL</div><div class="bubble bubble-user">Sim, pode ser</div></div>
+        <div class="chat-msg"><div class="avatar av-bot">AV</div><div class="typing"><span></span><span></span><span></span></div></div>
+      </div>
+      <div class="visual-footer">
+        <div class="input-fake">Digite uma mensagem...</div>
+        <button class="send-btn"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+<div class="logos-section">
+  <span class="logos-label">Tecnologia usada</span>
+  <div class="logos-list">
+    <span class="logo-badge">N8N</span><span class="logo-badge">Claude AI</span><span class="logo-badge">Ollama</span><span class="logo-badge">WhatsApp API</span><span class="logo-badge">Google Agenda</span><span class="logo-badge">Pipedrive</span><span class="logo-badge">HubSpot</span>
+  </div>
+</div>
+<div class="section-divider"></div>
+
+<!-- SERVICES -->
+<section class="services" id="servicos">
+  <span class="section-tag" data-reveal>O que fazemos</span>
+  <h2 class="section-title" data-reveal>Três níveis de<br><em>inteligência operacional</em></h2>
+  <p class="section-sub" data-reveal>Cada nível é construído sobre o anterior, criando uma operação totalmente autônoma — da prospecção até a gestão.</p>
+  <div class="levels-grid">
+    <div class="level" data-reveal>
+      <div class="level-header">
+        <div class="level-num"><span class="level-badge">Nível 01</span><span class="level-name">Atração e<br>Prospecção</span></div>
+        <div class="level-desc">O agente busca clientes para você — encontra, valida e entrega uma lista quente de oportunidades prontas para abordar.</div>
+      </div>
+      <div class="services-grid">
+        <div class="service-item"><span class="service-icon">🗺️</span><div class="service-name">Scraper de Leads 360</div><div class="service-desc">Busca automática no Google Maps, Instagram e LinkedIn para encontrar potenciais clientes no seu nicho.</div></div>
+        <div class="service-item"><span class="service-icon">✅</span><div class="service-name">Validador de Contatos</div><div class="service-desc">Verifica se o WhatsApp existe e se o e-mail é válido antes de qualquer abordagem.</div></div>
+        <div class="service-item"><span class="service-icon">📊</span><div class="service-name">Relatório de Oportunidades</div><div class="service-desc">PDF gerado por IA com os pontos fracos dos concorrentes do seu cliente, pronto para apresentar.</div></div>
+      </div>
+    </div>
+    <div class="level" data-reveal>
+      <div class="level-header">
+        <div class="level-num"><span class="level-badge">Nível 02</span><span class="level-name">Atendimento<br>e Conversão</span></div>
+        <div class="level-desc">O agente responde, filtra e agenda — sem precisar que nenhum humano toque no teclado nas primeiras interações.</div>
+      </div>
+      <div class="services-grid">
+        <div class="service-item"><span class="service-icon">💬</span><div class="service-name">Triagem de WhatsApp</div><div class="service-desc">Responde os primeiros 5 minutos de conversa para filtrar curiosos de clientes reais.</div></div>
+        <div class="service-item"><span class="service-icon">📅</span><div class="service-name">Agendador Inteligente</div><div class="service-desc">Integração com Google Agenda para marcar reuniões sem nenhuma intervenção humana.</div></div>
+        <div class="service-item"><span class="service-icon">🧠</span><div class="service-name">FAQ Dinâmico</div><div class="service-desc">Bot que lê os documentos da empresa e responde qualquer dúvida técnica com precisão.</div></div>
+      </div>
+    </div>
+    <div class="level" data-reveal>
+      <div class="level-header">
+        <div class="level-num"><span class="level-badge">Nível 03</span><span class="level-name">Inteligência<br>e Gestão</span></div>
+        <div class="level-desc">O agente gerencia seu CRM, analisa sua performance e gera propostas — uma operação que praticamente se administra sozinha.</div>
+      </div>
+      <div class="services-grid">
+        <div class="service-item"><span class="service-icon">🔗</span><div class="service-name">Alimentação de CRM</div><div class="service-desc">Pega os dados da conversa e alimenta automaticamente Pipedrive ou HubSpot em tempo real.</div></div>
+        <div class="service-item"><span class="service-icon">📈</span><div class="service-name">Dashboard de Performance</div><div class="service-desc">IA analisa vendas e diz exatamente quais vendedores e setores estão abaixo do potencial.</div></div>
+        <div class="service-item"><span class="service-icon">📄</span><div class="service-name">Automação de Propostas</div><div class="service-desc">Gera PDFs de orçamentos personalizados com base no que o cliente falou na conversa.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARE -->
+<section class="compare">
+  <span class="section-tag" data-reveal>Por que Agenvia?</span>
+  <h2 class="section-title" data-reveal>Agenvia vs. as<br><em>alternativas</em></h2>
+  <p class="section-sub" data-reveal>Compare antes de decidir. Transparência faz parte do nosso trabalho.</p>
+  <div class="compare-wrap" data-reveal>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th class="col-main">O que você precisa</th>
+          <th class="col-highlight">Agenvia</th>
+          <th>Contratar funcionário</th>
+          <th>Fazer você mesmo</th>
+          <th>Outras agências</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Atendimento 24h/7 dias</td><td class="col-highlight"><span class="check">✓</span> Sempre ativo</td><td><span class="cross">✗</span> Só horário comercial</td><td><span class="partial">Parcial</span> Requer tempo</td><td><span class="partial">Depende</span> Varia muito</td></tr>
+        <tr><td>Custo mensal previsível</td><td class="col-highlight"><span class="check">✓</span> R$800–8.500</td><td><span class="cross">✗</span> R$2.500+ CLT</td><td><span class="check">✓</span> Só tempo</td><td><span class="cross">✗</span> Geralmente mais caro</td></tr>
+        <tr><td>Sem conhecimento técnico</td><td class="col-highlight"><span class="check">✓</span> Você só usa</td><td><span class="check">✓</span> Treina e pronto</td><td><span class="cross">✗</span> Precisa aprender</td><td><span class="partial">Parcial</span> Depende do suporte</td></tr>
+        <tr><td>Implementação rápida</td><td class="col-highlight"><span class="check">✓</span> Até 2 semanas</td><td><span class="cross">✗</span> 1–3 meses contratando</td><td><span class="cross">✗</span> Meses de estudo</td><td><span class="partial">Parcial</span> 1–2 meses</td></tr>
+        <tr><td>Suporte contínuo incluso</td><td class="col-highlight"><span class="check">✓</span> Em todos os planos</td><td><span class="check">✓</span> Está na empresa</td><td><span class="cross">✗</span> Você resolve sozinho</td><td><span class="partial">Parcial</span> Geralmente extra</td></tr>
+        <tr><td>Escala conforme cresce</td><td class="col-highlight"><span class="check">✓</span> Muda de pacote</td><td><span class="cross">✗</span> Precisa contratar mais</td><td><span class="partial">Parcial</span> Demanda mais tempo</td><td><span class="partial">Parcial</span> Requer novo contrato</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="packages" id="pacotes">
+  <div class="packages-header">
+    <div>
+      <span class="section-tag" data-reveal>Planos e preços</span>
+      <h2 class="section-title" data-reveal>Escolha o nível certo<br><em>para sua operação</em></h2>
+    </div>
+    <p class="section-sub" data-reveal style="align-self:end;margin-bottom:0;">Cada pacote inclui implementação completa, treinamento e suporte. A mensalidade cobre a operação contínua dos agentes.</p>
+  </div>
+  <div class="packages-grid">
+    <div class="package-card" data-reveal>
+      <div class="pkg-tier"><div class="tier-dot" style="background:var(--bronze)"></div><span class="tier-label" style="color:var(--bronze)">Bronze</span></div>
+      <div class="pkg-name">Radar de Crescimento</div>
+      <div class="pkg-case">Referência: Setor de bem-estar & pet</div>
+      <div class="pkg-price">
+        <div class="price-from">A partir de</div>
+        <div class="price-val">R$ 800</div>
+        <div class="price-period">/mês · até R$1.200</div>
+        <div class="price-setup">Setup: <strong>R$ 700</strong> (único)</div>
+      </div>
+      <ul class="pkg-features">
+        <li>Scraper de leads (Maps + Instagram)</li>
+        <li>Validação de WhatsApp automática</li>
+        <li>Gerador de estratégia de marketing</li>
+        <li>Relatório de oportunidades em PDF</li>
+        <li>Suporte via e-mail</li>
+      </ul>
+      <div class="pkg-cta"><a href="https://wa.me/5551995090036?text=Olá! Tenho interesse no Pacote Bronze" class="pkg-btn pkg-btn-outline">Quero o Bronze →</a></div>
+    </div>
+    <div class="package-card featured" data-reveal>
+      <span class="pkg-tag">Mais popular</span>
+      <div class="pkg-tier"><div class="tier-dot" style="background:var(--silver)"></div><span class="tier-label" style="color:var(--silver)">Prata</span></div>
+      <div class="pkg-name">Vendedor Automático</div>
+      <div class="pkg-case">Referência: Profissional autônoma de beleza</div>
+      <div class="pkg-price">
+        <div class="price-from">A partir de</div>
+        <div class="price-val">R$ 2.000</div>
+        <div class="price-period">/mês · até R$3.500</div>
+        <div class="price-setup">Setup: <strong>R$ 2.000</strong> (único)</div>
+      </div>
+      <ul class="pkg-features">
+        <li>Tudo do Pacote Bronze</li>
+        <li>Landing page de conversão</li>
+        <li>Bot de triagem no WhatsApp</li>
+        <li>Agendamento automático (Google Agenda)</li>
+        <li>FAQ dinâmico com seus documentos</li>
+        <li>Suporte prioritário via WhatsApp</li>
+      </ul>
+      <div class="pkg-cta"><a href="https://wa.me/5551995090036?text=Olá! Tenho interesse no Pacote Prata" class="pkg-btn pkg-btn-filled">Quero o Prata →</a></div>
+    </div>
+    <div class="package-card" data-reveal>
+      <div class="pkg-tier"><div class="tier-dot" style="background:var(--gold)"></div><span class="tier-label" style="color:var(--gold)">Ouro</span></div>
+      <div class="pkg-name">Cérebro Operacional</div>
+      <div class="pkg-case">Referência: Agência de marketing e vendas</div>
+      <div class="pkg-price">
+        <div class="price-from">A partir de</div>
+        <div class="price-val">R$ 5.000</div>
+        <div class="price-period">/mês · até R$8.500+</div>
+        <div class="price-setup">Setup: <strong>R$ 4.000</strong> (único)</div>
+      </div>
+      <ul class="pkg-features">
+        <li>Tudo do Pacote Prata</li>
+        <li>Integração completa com CRM</li>
+        <li>Dashboard de performance com IA</li>
+        <li>Gerador de propostas automático</li>
+        <li>Unificação de processos internos</li>
+        <li>Suporte dedicado + reunião mensal</li>
+      </ul>
+      <div class="pkg-cta"><a href="https://wa.me/5551995090036?text=Olá! Tenho interesse no Pacote Ouro" class="pkg-btn pkg-btn-outline">Quero o Ouro →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how">
+  <span class="section-tag" data-reveal>Como funciona</span>
+  <h2 class="section-title" data-reveal>Do contrato ao<br><em>agente em produção</em></h2>
+  <p class="section-sub" data-reveal style="margin-bottom:3rem;">Processo claro, sem surpresas. Em menos de 2 semanas seu agente já está trabalhando.</p>
+  <div class="steps-grid">
+    <div class="step"><div class="step-num">01</div><span class="step-icon">🤝</span><div class="step-title">Diagnóstico gratuito</div><div class="step-desc">Reunião de 30 min para entender sua operação, gargalos e definir qual pacote faz mais sentido.</div></div>
+    <div class="step"><div class="step-num">02</div><span class="step-icon">⚙️</span><div class="step-title">Configuração e setup</div><div class="step-desc">Nossa equipe implementa e testa todos os agentes com os dados e documentos da sua empresa.</div></div>
+    <div class="step"><div class="step-num">03</div><span class="step-icon">🚀</span><div class="step-title">Ativação e treinamento</div><div class="step-desc">Ligamos tudo, treinamos seu time em 1h e o agente começa a trabalhar imediatamente.</div></div>
+    <div class="step"><div class="step-num">04</div><span class="step-icon">📊</span><div class="step-title">Monitoramento contínuo</div><div class="step-desc">Acompanhamos a performance mensalmente e ajustamos os agentes conforme seu negócio cresce.</div></div>
+  </div>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guarantee">
+  <div class="guarantee-inner" data-reveal>
+    <div class="guarantee-badge"><span class="days">30</span><span class="days-label">dias de<br>garantia</span></div>
+    <div class="guarantee-text">
+      <h3>Se não funcionar, devolvemos o setup.</h3>
+      <p>Se em 30 dias após a ativação você não perceber resultado concreto na sua operação — menos tempo perdido, mais atendimentos automatizados, mais oportunidades geradas — devolvemos 100% da taxa de setup. Sem burocracia, sem letras miúdas.</p>
+    </div>
+    <a href="https://wa.me/5551995090036?text=Olá! Quero saber mais sobre a garantia da Agenvia" class="guarantee-cta">Quero essa garantia →</a>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="cases" id="cases">
+  <span class="section-tag" data-reveal>Referências de mercado</span>
+  <h2 class="section-title" data-reveal>Problemas reais que<br><em>nossos agentes resolvem</em></h2>
+  <p class="section-sub" data-reveal>Cada pacote foi desenhado com base em dores concretas de empresas como essas. Reconhece alguma?</p>
+  <div class="cases-grid">
+    <div class="case-card" data-reveal>
+      <p class="case-quote">Um negócio de bem-estar e pet com equipe enxuta perde consultas e atendimentos fora do horário comercial — sem ninguém para responder, o cliente vai para o concorrente.</p>
+      <div class="case-divider"></div>
+      <div class="case-client">
+        <div class="case-avatar">🐾</div>
+        <div><div class="case-name">Spa & Pet Control</div><div class="case-role">Referência · Setor de bem-estar animal</div></div>
+        <span class="case-pkg" style="background:rgba(200,146,74,0.12);color:var(--bronze)">Bronze</span>
+      </div>
+    </div>
+    <div class="case-card" data-reveal>
+      <p class="case-quote">Profissional autônoma de beleza passa horas respondendo curiosos no WhatsApp — energia que deveria estar em clientes prontos para fechar, não em triagem manual.</p>
+      <div class="case-divider"></div>
+      <div class="case-client">
+        <div class="case-avatar">💄</div>
+        <div><div class="case-name">Makeup & Estética</div><div class="case-role">Referência · Profissional autônoma de beleza</div></div>
+        <span class="case-pkg" style="background:rgba(138,155,168,0.12);color:var(--silver)">Prata</span>
+      </div>
+    </div>
+    <div class="case-card" data-reveal>
+      <p class="case-quote">Agência de marketing com time de vendas não sabe quais vendedores convertem menos em quais nichos — e deixa dinheiro na mesa por falta de dados acionáveis em tempo real.</p>
+      <div class="case-divider"></div>
+      <div class="case-client">
+        <div class="case-avatar">📣</div>
+        <div><div class="case-name">Agência de Marketing</div><div class="case-role">Referência · Setor de marketing e vendas</div></div>
+        <span class="case-pkg" style="background:rgba(197,168,75,0.12);color:var(--gold)">Ouro</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <span class="section-tag" data-reveal>Dúvidas frequentes</span>
+  <h2 class="section-title" data-reveal>Perguntas que todo<br><em>cliente faz antes</em></h2>
+  <div class="faq-grid" data-reveal>
+    <div class="faq-item">
+      <div class="faq-question">Preciso ter conhecimento técnico para usar?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Não. Nossa equipe faz toda a implementação e configuração. Você recebe o agente já funcionando e fazemos um treinamento de 1h com seu time. Nenhuma linha de código necessária.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Quanto tempo leva para o agente estar funcionando?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Em média 7 a 14 dias após a assinatura do contrato e pagamento do setup. O prazo depende da complexidade do pacote e de quantas integrações precisam ser configuradas.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">E se eu quiser cancelar?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Trabalhamos com contratos mínimos de 3 meses para garantir que você veja resultado real. Após esse período, o cancelamento pode ser feito com 30 dias de aviso prévio, sem multa.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">O agente substitui minha equipe?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Não — ele libera sua equipe. O agente cuida das tarefas repetitivas para que seus colaboradores foquem em negociações, relacionamento e decisões estratégicas.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Funciona para qualquer tipo de empresa?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Nosso foco são PMEs brasileiras com times enxutos que precisam escalar sem contratar. Se tiver dúvida sobre o seu setor, o diagnóstico gratuito esclarece tudo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Posso mudar de pacote depois?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Sim. O upgrade de Bronze para Prata, ou de Prata para Ouro, é feito a qualquer momento. Você paga apenas a diferença do setup e a nova mensalidade começa no próximo ciclo.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">Meus dados ficam seguros?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Sim. Trabalhamos com modelos que podem rodar localmente (Ollama) para dados sensíveis, e todos os fluxos seguem boas práticas de segurança. Assinamos contrato de confidencialidade com todos os clientes.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-question">O que acontece se o agente errar?<div class="faq-icon">+</div></div>
+      <div class="faq-sep"></div>
+      <div class="faq-answer">Todo agente tem pontos de transferência para humanos quando não sabe responder. Monitoramos os logs mensalmente e ajustamos o comportamento conforme os erros aparecem — isso está incluso no suporte.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<div class="tech">
+  <span class="tech-label">Stack tecnológica</span>
+  <div class="tech-items">
+    <span class="tech-item">⚡ N8N Automation</span>
+    <span class="tech-item">🤖 Claude AI (Anthropic)</span>
+    <span class="tech-item">🦙 Ollama (Local)</span>
+    <span class="tech-item">💬 Evolution API (WhatsApp)</span>
+    <span class="tech-item">📅 Google Workspace</span>
+    <span class="tech-item">📊 Pipedrive / HubSpot</span>
+  </div>
+</div>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="contato">
+  <h2 class="cta-headline" data-reveal>Pronto para ter um<br>funcionário que nunca<br><em>descansa?</em></h2>
+  <p class="cta-sub" data-reveal>Diagnóstico gratuito de 30 minutos. Sem compromisso. Descubra qual agente pode transformar sua operação esta semana.</p>
+  <div class="cta-actions" data-reveal>
+    <a href="https://wa.me/5551995090036?text=Olá! Gostaria de fazer um diagnóstico gratuito com a Agenvia" class="btn-whatsapp">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Diagnóstico gratuito via WhatsApp
+    </a>
+    <a href="#pacotes" class="btn-secondary">Ver todos os pacotes →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Agen<span>via</span></a>
+  <ul class="footer-links">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#pacotes">Pacotes</a></li>
+    <li><a href="#cases">Referências</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <p class="footer-copy">© 2025 Agenvia · Todos os direitos reservados</p>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  const waFloat = document.getElementById('waFloat');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    nav.classList.toggle('scrolled', y > 40);
+    waFloat.classList.toggle('compact', y > 300);
+  });
+
+  // Scroll reveal com stagger por grupo
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const siblings = [...entry.target.parentElement.querySelectorAll('[data-reveal]:not(.visible)')];
+        const idx = siblings.indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), idx * 100);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+  reveals.forEach(el => obs.observe(el));
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+</script>
+</body>
+</html>
