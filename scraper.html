@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenvia — Scraper de Leads</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f0f0f;
+    --paper: #f5f2ec;
+    --paper-dark: #ede9e1;
+    --accent: #d4500a;
+    --accent-light: #f26a1f;
+    --muted: #7a7060;
+    --line: rgba(15,15,15,0.12);
+    --white: #ffffff;
+    --green: #22c55e;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* HEADER */
+  header {
+    padding: 1.5rem 4rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(245,242,236,0.94);
+    backdrop-filter: blur(16px);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: 'Fraunces', serif; font-size: 1.85rem; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+  /* MAIN */
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 4rem 2rem; }
+  .container { width: 100%; max-width: 640px; }
+
+  .page-tag { display: inline-flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .page-tag::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--accent); }
+  .page-title { font-family: 'Fraunces', serif; font-size: 2.5rem; font-weight: 300; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink); margin-bottom: 0.75rem; }
+  .page-title em { font-style: italic; color: var(--accent); }
+  .page-sub { font-size: 0.95rem; font-weight: 300; line-height: 1.7; color: var(--muted); margin-bottom: 2.5rem; }
+
+  /* FORM */
+  .form { background: var(--white); border: 1px solid var(--line); border-radius: 4px; padding: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+  .field input, .field select {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    background: var(--paper);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .field input:focus, .field select:focus { border-color: var(--accent); }
+  .field input::placeholder { color: rgba(15,15,15,0.3); }
+
+  .coords-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  .btn-submit {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    background: var(--accent); color: var(--white);
+    padding: 0.9rem 2rem;
+    font-size: 0.9rem; font-weight: 500;
+    border: none; border-radius: 2px; cursor: pointer;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+  }
+  .btn-submit:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,80,10,0.3); }
+  .btn-submit:disabled { background: var(--muted); transform: none; box-shadow: none; cursor: not-allowed; }
+  .btn-submit .spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+  .btn-submit.loading .spinner { display: block; }
+  .btn-submit.loading .btn-text { display: none; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* STATUS */
+  .status { display: none; padding: 1rem 1.25rem; border-radius: 2px; font-size: 0.85rem; font-weight: 400; line-height: 1.5; margin-top: 1rem; }
+  .status.success { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); color: #166534; display: block; }
+  .status.error { background: rgba(212,80,10,0.08); border: 1px solid rgba(212,80,10,0.2); color: var(--accent); display: block; }
+
+  /* CIDADES POPULARES */
+  .cidades { margin-top: 2rem; }
+  .cidades-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .cidades-list { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .cidade-btn {
+    font-size: 0.78rem; font-weight: 400; color: var(--muted);
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line); border-radius: 2px;
+    cursor: pointer; background: var(--white);
+    transition: all 0.15s;
+  }
+  .cidade-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* NICHOS */
+  .nichos { margin-top: 1rem; }
+  .nichos-label { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+  .nichos-list { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .nicho-btn {
+    font-size: 0.78rem; font-weight: 400; color: var(--muted);
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line); border-radius: 2px;
+    cursor: pointer; background: var(--white);
+    transition: all 0.15s;
+  }
+  .nicho-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* RESULTADO */
+  .resultado { display: none; margin-top: 2rem; background: var(--white); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .resultado-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .resultado-title { font-family: 'Fraunces', serif; font-size: 1rem; font-weight: 600; color: var(--ink); }
+  .resultado-count { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: rgba(212,80,10,0.08); padding: 0.2rem 0.5rem; border-radius: 2px; }
+  .resultado-body { padding: 1rem 0; max-height: 320px; overflow-y: auto; }
+  .lead-item { padding: 0.75rem 1.5rem; border-bottom: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; align-items: start; transition: background 0.15s; }
+  .lead-item:last-child { border-bottom: none; }
+  .lead-item:hover { background: rgba(212,80,10,0.02); }
+  .lead-nome { font-size: 0.85rem; font-weight: 500; color: var(--ink); }
+  .lead-info { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+  .lead-rating { display: flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; font-weight: 500; color: var(--ink); white-space: nowrap; }
+  .star { color: #f59e0b; }
+  .resultado-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .sheets-link { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 500; color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+  .sheets-link:hover { opacity: 0.7; }
+
+  footer { padding: 2rem 4rem; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+  .footer-copy { font-size: 0.75rem; color: var(--muted); }
+
+  @media (max-width: 768px) {
+    header { padding: 1.25rem 1.5rem; }
+    .coords-row { grid-template-columns: 1fr; }
+    footer { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Agen<span>via</span></a>
+  <span class="header-tag">Scraper de Leads · Bronze</span>
+</header>
+
+<main>
+  <div class="container">
+    <span class="page-tag">Pacote Bronze</span>
+    <h1 class="page-title">Buscar leads<br><em>automaticamente</em></h1>
+    <p class="page-sub">Preencha o nicho e a cidade. O agente busca empresas no Google Maps e exporta direto para o Google Sheets.</p>
+
+    <div class="form">
+      <div class="field">
+        <label>Nicho / Segmento</label>
+        <input type="text" id="nicho" placeholder="Ex: clínica odontológica, academia, pet shop..." />
+      </div>
+
+      <div class="nichos">
+        <div class="nichos-label">Nichos populares</div>
+        <div class="nichos-list">
+          <button class="nicho-btn" onclick="setNicho('clínica odontológica')">🦷 Odontologia</button>
+          <button class="nicho-btn" onclick="setNicho('academia de ginástica')">💪 Academia</button>
+          <button class="nicho-btn" onclick="setNicho('pet shop')">🐾 Pet Shop</button>
+          <button class="nicho-btn" onclick="setNicho('restaurante')">🍽️ Restaurante</button>
+          <button class="nicho-btn" onclick="setNicho('imobiliária')">🏠 Imobiliária</button>
+          <button class="nicho-btn" onclick="setNicho('escritório de contabilidade')">📊 Contabilidade</button>
+          <button class="nicho-btn" onclick="setNicho('agência de marketing')">📣 Marketing</button>
+          <button class="nicho-btn" onclick="setNicho('clínica de estética')">💆 Estética</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Cidade</label>
+        <input type="text" id="cidade" placeholder="Ex: Porto Alegre, São Paulo, Curitiba..." />
+      </div>
+
+      <div class="cidades">
+        <div class="cidades-label">Cidades rápidas</div>
+        <div class="cidades-list">
+          <button class="cidade-btn" onclick="setCidade('Porto Alegre', '@-30.0346471,-51.2176584,14z')">Porto Alegre</button>
+          <button class="cidade-btn" onclick="setCidade('São Paulo', '@-23.5505199,-46.6333094,13z')">São Paulo</button>
+          <button class="cidade-btn" onclick="setCidade('Rio de Janeiro', '@-22.9068467,-43.1728965,13z')">Rio de Janeiro</button>
+          <button class="cidade-btn" onclick="setCidade('Curitiba', '@-25.4284171,-49.2732865,13z')">Curitiba</button>
+          <button class="cidade-btn" onclick="setCidade('Belo Horizonte', '@-19.9166813,-43.9344931,13z')">Belo Horizonte</button>
+          <button class="cidade-btn" onclick="setCidade('Florianópolis', '@-27.5954,-48.548,13z')">Florianópolis</button>
+          <button class="cidade-btn" onclick="setCidade('Salvador', '@-12.9714,-38.5014,13z')">Salvador</button>
+          <button class="cidade-btn" onclick="setCidade('Brasília', '@-15.7801,-47.9292,13z')">Brasília</button>
+        </div>
+      </div>
+
+      <input type="hidden" id="coordenadas" value="@-30.0346471,-51.2176584,14z">
+
+      <button class="btn-submit" id="btnSubmit" onclick="rodarScraper()">
+        <div class="spinner"></div>
+        <span class="btn-text">🔍 Buscar leads agora</span>
+      </button>
+
+      <div class="status" id="status"></div>
+    </div>
+
+    <div class="resultado" id="resultado">
+      <div class="resultado-header">
+        <span class="resultado-title">Leads encontrados</span>
+        <span class="resultado-count" id="leadCount">0 empresas</span>
+      </div>
+      <div class="resultado-body" id="leadsList"></div>
+      <div class="resultado-footer">
+        <span style="font-size:0.78rem;color:var(--muted)">Exportado para Google Sheets automaticamente</span>
+        <a href="https://docs.google.com/spreadsheets/d/1ME5FRAJB1AUGch3eVIilMOnmdY_LGAJX9DqIW7A6LSg" target="_blank" class="sheets-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ver no Google Sheets
+        </a>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <a href="index.html" class="logo" style="font-size:1rem;">Agen<span>via</span></a>
+  <p class="footer-copy">© 2026 Agenvia · Pacote Bronze</p>
+</footer>
+
+<script>
+  const WEBHOOK_URL = 'http://localhost:5678/webhook/scraper-leads';
+
+  function setNicho(nicho) {
+    document.getElementById('nicho').value = nicho;
+  }
+
+  function setCidade(cidade, coords) {
+    document.getElementById('cidade').value = cidade;
+    document.getElementById('coordenadas').value = coords;
+  }
+
+  async function rodarScraper() {
+    const nicho = document.getElementById('nicho').value.trim();
+    const cidade = document.getElementById('cidade').value.trim();
+    const coordenadas = document.getElementById('coordenadas').value;
+    const btn = document.getElementById('btnSubmit');
+    const status = document.getElementById('status');
+    const resultado = document.getElementById('resultado');
+
+    if (!nicho || !cidade) {
+      status.className = 'status error';
+      status.textContent = 'Preencha o nicho e a cidade antes de buscar.';
+      return;
+    }
+
+    // Loading
+    btn.classList.add('loading');
+    btn.disabled = true;
+    status.className = 'status';
+    resultado.style.display = 'none';
+
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nicho, cidade, coordenadas })
+      });
+
+      if (!response.ok) throw new Error('Erro no webhook');
+
+      const data = await response.json();
+      const leads = Array.isArray(data) ? data : [data];
+
+      // Mostra resultado
+      document.getElementById('leadCount').textContent = `${leads.length} empresa${leads.length !== 1 ? 's' : ''}`;
+      const list = document.getElementById('leadsList');
+      list.innerHTML = leads.map(lead => `
+        <div class="lead-item">
+          <div>
+            <div class="lead-nome">${lead.nome || 'Sem nome'}</div>
+            <div class="lead-info">${lead.telefone || ''} · ${lead.endereco ? lead.endereco.split(',').slice(0,2).join(',') : ''}</div>
+          </div>
+          <div class="lead-rating">
+            <span class="star">★</span> ${lead.avaliacao || '-'}
+          </div>
+        </div>
+      `).join('');
+
+      resultado.style.display = 'block';
+      status.className = 'status success';
+      status.textContent = `✓ ${leads.length} leads encontrados e exportados para o Google Sheets!`;
+
+    } catch (err) {
+      status.className = 'status error';
+      status.textContent = 'Erro ao conectar com o N8N. Verifique se o workflow está publicado e o webhook ativo.';
+    } finally {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+    }
+  }
+
+  // Enter para buscar
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') rodarScraper();
+  });
+</script>
+</body>
+</html>
