@@ -35,7 +35,7 @@
     transition: border-color 0.3s, box-shadow 0.3s;
   }
   nav.scrolled { border-bottom-color: rgba(15,15,15,0.12); box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
-  .nav-logo { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+  .nav-logo { font-family: 'Fraunces', serif; font-size: 1.85rem; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); text-decoration: none; }
   .nav-logo span { color: var(--accent); }
   .nav-links { display: flex; gap: 2.5rem; list-style: none; }
   .nav-links a { font-size: 0.875rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
@@ -129,6 +129,18 @@
   .compare-table tr:hover td { background: rgba(0,0,0,0.015); }
   .compare-table tr:hover td.col-highlight { background: rgba(212,80,10,0.05); }
   .check { color: #22c55e; } .cross { color: #ef4444; } .partial { color: var(--bronze); font-size: 0.8rem; font-weight: 500; }
+
+  /* BILLING TOGGLE */
+  .billing-toggle { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; }
+  .toggle-label { font-size: 0.85rem; font-weight: 500; color: var(--muted); transition: color 0.2s; }
+  .toggle-label.active { color: var(--ink); }
+  .toggle-switch { position: relative; width: 48px; height: 26px; cursor: pointer; }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; }
+  .toggle-track { position: absolute; inset: 0; background: var(--paper-dark); border: 1px solid var(--line); border-radius: 50px; transition: background 0.2s; }
+  .toggle-switch input:checked ~ .toggle-track { background: var(--accent); border-color: var(--accent); }
+  .toggle-knob { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: var(--white); border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+  .toggle-switch input:checked ~ .toggle-knob { transform: translateX(22px); }
+  .toggle-badge { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: rgba(212,80,10,0.1); color: var(--accent); padding: 0.2rem 0.5rem; border-radius: 2px; }
 
   /* PACKAGES */
   .packages { padding: 6rem 4rem; background: var(--paper-dark); }
@@ -426,6 +438,16 @@
     <div>
       <span class="section-tag" data-reveal>Planos e preços</span>
       <h2 class="section-title" data-reveal>Escolha o nível certo<br><em>para sua operação</em></h2>
+      <div class="billing-toggle" data-reveal>
+        <span class="toggle-label active" id="label-mensal">Mensal</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="billing-switch">
+          <div class="toggle-track"></div>
+          <div class="toggle-knob"></div>
+        </label>
+        <span class="toggle-label" id="label-anual">Anual</span>
+        <span class="toggle-badge">15% off</span>
+      </div>
     </div>
     <p class="section-sub" data-reveal style="align-self:end;margin-bottom:0;">Cada pacote inclui implementação completa, treinamento e suporte. A mensalidade cobre a operação contínua dos agentes.</p>
   </div>
@@ -436,8 +458,8 @@
       <div class="pkg-case">Referência: Setor de bem-estar & pet</div>
       <div class="pkg-price">
         <div class="price-from">A partir de</div>
-        <div class="price-val">R$ 800</div>
-        <div class="price-period">/mês · até R$1.200</div>
+        <div class="price-val" id="price-bronze">R$ 800</div>
+        <div class="price-period" id="period-bronze">/mês · até R$1.200</div>
         <div class="price-setup">Setup: <strong>R$ 700</strong> (único)</div>
       </div>
       <ul class="pkg-features">
@@ -456,8 +478,8 @@
       <div class="pkg-case">Referência: Profissional autônoma de beleza</div>
       <div class="pkg-price">
         <div class="price-from">A partir de</div>
-        <div class="price-val">R$ 2.000</div>
-        <div class="price-period">/mês · até R$3.500</div>
+        <div class="price-val" id="price-prata">R$ 2.000</div>
+        <div class="price-period" id="period-prata">/mês · até R$3.500</div>
         <div class="price-setup">Setup: <strong>R$ 2.000</strong> (único)</div>
       </div>
       <ul class="pkg-features">
@@ -476,8 +498,8 @@
       <div class="pkg-case">Referência: Agência de marketing e vendas</div>
       <div class="pkg-price">
         <div class="price-from">A partir de</div>
-        <div class="price-val">R$ 5.000</div>
-        <div class="price-period">/mês · até R$8.500+</div>
+        <div class="price-val" id="price-ouro">R$ 5.000</div>
+        <div class="price-period" id="period-ouro">/mês · até R$8.500+</div>
         <div class="price-setup">Setup: <strong>R$ 4.000</strong> (único)</div>
       </div>
       <ul class="pkg-features">
@@ -638,7 +660,7 @@
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
-  <p class="footer-copy">© 2025 Agenvia · Todos os direitos reservados</p>
+  <p class="footer-copy">© 2026 Agenvia · Todos os direitos reservados</p>
 </footer>
 
 <script>
@@ -665,7 +687,29 @@
   }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
   reveals.forEach(el => obs.observe(el));
 
-  // FAQ accordion
+  // Billing toggle
+  const billingSwitch = document.getElementById('billing-switch');
+  const labelMensal = document.getElementById('label-mensal');
+  const labelAnual = document.getElementById('label-anual');
+
+  const prices = {
+    bronze: { mensal: ['R$ 800', '/mês · até R$1.200'], anual: ['R$ 680', '/mês · até R$1.020 — cobrado anualmente'] },
+    prata:  { mensal: ['R$ 2.000', '/mês · até R$3.500'], anual: ['R$ 1.700', '/mês · até R$2.975 — cobrado anualmente'] },
+    ouro:   { mensal: ['R$ 5.000', '/mês · até R$8.500+'], anual: ['R$ 4.250', '/mês · até R$7.225 — cobrado anualmente'] },
+  };
+
+  billingSwitch.addEventListener('change', () => {
+    const isAnual = billingSwitch.checked;
+    labelMensal.classList.toggle('active', !isAnual);
+    labelAnual.classList.toggle('active', isAnual);
+    const mode = isAnual ? 'anual' : 'mensal';
+    ['bronze','prata','ouro'].forEach(pkg => {
+      const val = document.getElementById('price-' + pkg);
+      const per = document.getElementById('period-' + pkg);
+      if (val) val.textContent = prices[pkg][mode][0];
+      if (per) per.textContent = prices[pkg][mode][1];
+    });
+  });
   document.querySelectorAll('.faq-question').forEach(btn => {
     btn.addEventListener('click', () => {
       const item = btn.closest('.faq-item');
