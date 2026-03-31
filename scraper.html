@@ -153,6 +153,17 @@
 
     <div class="form">
       <div class="field">
+        <label>Nome do Cliente</label>
+        <input type="text" id="cliente" placeholder="Ex: Clínica São Lucas, Pet Shop do João..." />
+      </div>
+
+      <div class="field">
+        <label>ID da Planilha Google Sheets</label>
+        <input type="text" id="planilha_id" placeholder="Cole o ID da planilha do cliente aqui..." />
+        <span style="font-size:0.72rem;color:var(--muted);margin-top:0.25rem;">O ID está na URL: docs.google.com/spreadsheets/d/<strong>ID_AQUI</strong>/edit</span>
+      </div>
+
+      <div class="field">
         <label>Nicho / Segmento</label>
         <input type="text" id="nicho" placeholder="Ex: clínica odontológica, academia, pet shop..." />
       </div>
@@ -208,7 +219,7 @@
       <div class="resultado-body" id="leadsList"></div>
       <div class="resultado-footer">
         <span style="font-size:0.78rem;color:var(--muted)">Exportado para Google Sheets automaticamente</span>
-        <a href="https://docs.google.com/spreadsheets/d/1ME5FRAJB1AUGch3eVIilMOnmdY_LGAJX9DqIW7A6LSg" target="_blank" class="sheets-link">
+        <a href="#" target="_blank" class="sheets-link" id="sheetsLink">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Ver no Google Sheets
         </a>
@@ -236,6 +247,8 @@
   }
 
   async function rodarScraper() {
+    const cliente = document.getElementById('cliente').value.trim();
+    const planilha_id = document.getElementById('planilha_id').value.trim();
     const nicho = document.getElementById('nicho').value.trim();
     const cidade = document.getElementById('cidade').value.trim();
     const coordenadas = document.getElementById('coordenadas').value;
@@ -243,9 +256,9 @@
     const status = document.getElementById('status');
     const resultado = document.getElementById('resultado');
 
-    if (!nicho || !cidade) {
+    if (!cliente || !planilha_id || !nicho || !cidade) {
       status.className = 'status error';
-      status.textContent = 'Preencha o nicho e a cidade antes de buscar.';
+      status.textContent = 'Preencha todos os campos: nome do cliente, ID da planilha, nicho e cidade.';
       return;
     }
 
@@ -259,7 +272,7 @@
       const response = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nicho, cidade, coordenadas })
+        body: JSON.stringify({ cliente, planilha_id, nicho, cidade, coordenadas })
       });
 
       if (!response.ok) throw new Error('Erro no webhook');
@@ -284,7 +297,10 @@
 
       resultado.style.display = 'block';
       status.className = 'status success';
-      status.textContent = `✓ ${leads.length} leads encontrados e exportados para o Google Sheets!`;
+      status.textContent = `✓ ${leads.length} leads encontrados e exportados para o Google Sheets do cliente!`;
+
+      // Atualiza link da planilha
+      document.getElementById('sheetsLink').href = `https://docs.google.com/spreadsheets/d/${planilha_id}`;
 
     } catch (err) {
       status.className = 'status error';
