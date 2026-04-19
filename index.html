@@ -604,6 +604,238 @@ footer {
 @keyframes waPop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .wa-float svg { width: 28px; height: 28px; fill: #fff; }
 
+/* ── CALCULATOR SECTION ─────────────────────────────── */
+.calc-section { background: var(--ink); padding: clamp(4rem,8vw,7rem) clamp(1.5rem,5vw,4rem); }
+.calc-section .section-label { color: rgba(200,234,224,.6); }
+.calc-section .section-title { color: #fff; }
+.calc-section .section-sub { color: rgba(255,255,255,.45); }
+
+.calc-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  align-items: start;
+}
+@media (max-width: 760px) { .calc-main-grid { grid-template-columns: 1fr; } }
+
+.calc-inputs {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--r);
+  padding: 2rem;
+}
+.calc-card-title {
+  font-size: .7rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--g3); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.calc-card-title::before {
+  content: ''; width: 18px; height: 2px;
+  background: var(--g3); border-radius: 2px;
+}
+.calc-field { margin-bottom: 1.4rem; }
+.calc-field label {
+  display: block; font-size: .8rem; font-weight: 600;
+  color: rgba(255,255,255,.5); margin-bottom: .45rem;
+}
+.calc-hint { font-size: .7rem; color: rgba(255,255,255,.25); font-weight: 400; margin-left: .3rem; }
+.calc-select, .calc-input-num {
+  width: 100%; height: 44px;
+  background: rgba(255,255,255,.06);
+  border: 1.5px solid rgba(255,255,255,.1);
+  border-radius: 8px; color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .9rem; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none;
+}
+.calc-select {
+  padding: 0 2.4rem 0 .9rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right .9rem center;
+}
+.calc-select option { background: #2a2a28; color: #fff; }
+.calc-input-wrap { position: relative; }
+.calc-prefix {
+  position: absolute; left: .9rem; top: 50%;
+  transform: translateY(-50%);
+  font-size: .9rem; font-weight: 600;
+  color: rgba(255,255,255,.3); pointer-events: none;
+}
+.calc-input-num { padding: 0 .9rem 0 2rem; }
+.calc-input-num::-webkit-outer-spin-button,
+.calc-input-num::-webkit-inner-spin-button { -webkit-appearance: none; }
+.calc-select:focus, .calc-input-num:focus {
+  border-color: var(--g3);
+  box-shadow: 0 0 0 3px rgba(200,234,224,.1);
+}
+.calc-slider-row {
+  display: flex; align-items: center; gap: .8rem; margin-top: .45rem;
+}
+.calc-range {
+  flex: 1; height: 4px; -webkit-appearance: none; appearance: none;
+  background: linear-gradient(to right, var(--g) 0%, var(--g) var(--pct,30%), rgba(255,255,255,.12) var(--pct,30%), rgba(255,255,255,.12) 100%);
+  border-radius: 4px; outline: none; cursor: pointer; border: none; box-shadow: none;
+}
+.calc-range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  background: var(--g); border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(15,110,86,.5);
+  border: 2px solid rgba(255,255,255,.2);
+  cursor: pointer; transition: transform .15s;
+}
+.calc-range::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.calc-slider-val {
+  min-width: 3rem; text-align: right;
+  font-size: .9rem; font-weight: 700;
+  color: var(--g3); font-family: 'Fraunces', serif;
+}
+
+/* Results panel */
+.calc-results {
+  background: rgba(15,110,86,.12);
+  border: 1px solid rgba(15,110,86,.25);
+  border-radius: var(--r);
+  padding: 2rem;
+  position: sticky; top: 5.5rem;
+}
+.calc-loss-block {
+  text-align: center;
+  padding: 1.5rem 0 1.2rem;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  margin-bottom: 1.4rem;
+}
+.calc-loss-eyebrow {
+  font-size: .7rem; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.35); margin-bottom: .4rem;
+}
+.calc-loss-num {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(2.6rem,4vw,3.6rem);
+  font-weight: 700; color: #FF8A80; line-height: 1;
+  transition: all .35s cubic-bezier(.34,1.56,.64,1);
+}
+.calc-loss-year { font-size: .82rem; color: rgba(255,255,255,.3); margin-top: .4rem; }
+
+.calc-rows { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.4rem; }
+.calc-row {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: .5rem; padding: .6rem .85rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 8px;
+}
+.calc-row-label { font-size: .8rem; color: rgba(255,255,255,.45); line-height: 1.3; }
+.calc-row-sub { font-size: .68rem; color: rgba(255,255,255,.2); margin-top: .1rem; }
+.calc-row-val { font-size: .95rem; font-weight: 700; color: #fff; font-family: 'Fraunces', serif; white-space: nowrap; }
+.calc-row-val.neg { color: #FF8A80; }
+.calc-row-val.pos { color: #69F0AE; }
+
+.calc-roi-box {
+  background: rgba(15,110,86,.2);
+  border: 1px solid rgba(15,110,86,.35);
+  border-radius: 10px; padding: 1.1rem;
+  text-align: center; margin-bottom: 1.2rem;
+}
+.calc-roi-label { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--g3); margin-bottom: .3rem; }
+.calc-roi-num { font-family: 'Fraunces', serif; font-size: 2rem; font-weight: 700; color: #69F0AE; }
+.calc-roi-sub { font-size: .75rem; color: rgba(255,255,255,.35); margin-top: .2rem; }
+
+.calc-plan {
+  background: var(--g); border-radius: 10px;
+  padding: .9rem 1.1rem; margin-bottom: 1.1rem;
+}
+.calc-plan-label { font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: .2rem; }
+.calc-plan-name { font-size: 1rem; font-weight: 700; color: #fff; }
+.calc-plan-why { font-size: .78rem; color: rgba(255,255,255,.65); margin-top: .2rem; line-height: 1.4; }
+
+.calc-payback {
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  font-size: .8rem; color: rgba(255,255,255,.35);
+  padding-top: .8rem; border-top: 1px solid rgba(255,255,255,.07);
+}
+.calc-payback strong { color: rgba(255,255,255,.65); }
+
+/* Form inside calculator section */
+.calc-form-wrap {
+  margin-top: 2.5rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: var(--r); overflow: hidden;
+}
+.calc-form-header {
+  background: var(--g); padding: 1.8rem 2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+.calc-form-header h3 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.2rem,2.5vw,1.6rem);
+  font-weight: 600; color: #fff; line-height: 1.2;
+}
+.calc-form-header p { font-size: .85rem; color: rgba(255,255,255,.6); margin-top: .25rem; }
+.calc-form-badge {
+  background: rgba(255,255,255,.15); color: #fff;
+  border-radius: 8px; padding: .45rem .85rem;
+  font-size: .75rem; font-weight: 700; white-space: nowrap; text-align: center;
+}
+.calc-form-body { padding: 1.8rem 2rem; }
+.calc-form-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: .9rem 1.4rem; margin-bottom: 1.4rem;
+}
+@media (max-width: 580px) { .calc-form-grid { grid-template-columns: 1fr; } }
+.cff label { display: block; font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.45); margin-bottom: .35rem; }
+.cff input, .cff select {
+  width: 100%; height: 44px;
+  background: rgba(255,255,255,.06);
+  border: 1.5px solid rgba(255,255,255,.1);
+  border-radius: 8px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: .9rem;
+  outline: none; padding: 0 .9rem;
+  transition: border-color .2s;
+  appearance: none;
+}
+.cff input::placeholder { color: rgba(255,255,255,.2); }
+.cff input:focus, .cff select:focus { border-color: var(--g3); }
+.cff select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position: right .9rem center; padding-right: 2.4rem; }
+.cff select option { background: #1a1a18; }
+.calc-submit-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.calc-btn-submit {
+  background: var(--g3); color: var(--g2);
+  border: none; border-radius: 100px;
+  padding: .82rem 2rem; font-size: .95rem; font-weight: 700;
+  font-family: 'DM Sans', sans-serif; cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 4px 16px rgba(200,234,224,.2);
+  display: flex; align-items: center; gap: .5rem;
+}
+.calc-btn-submit:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(200,234,224,.3); }
+.calc-privacy { font-size: .72rem; color: rgba(255,255,255,.25); }
+.calc-success {
+  display: none; text-align: center;
+  padding: 2.5rem 2rem;
+}
+.calc-success.show { display: block; }
+.calc-form-body.sent .calc-form-grid,
+.calc-form-body.sent .calc-submit-row { display: none; }
+.calc-success-icon {
+  width: 56px; height: 56px; background: rgba(15,110,86,.2);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; margin: 0 auto .9rem; font-size: 1.6rem;
+}
+.calc-success h4 {
+  font-family: 'Fraunces', serif; font-size: 1.4rem;
+  font-weight: 600; color: #fff; margin-bottom: .4rem;
+}
+.calc-success p { font-size: .875rem; color: rgba(255,255,255,.45); }
+
+@keyframes calcPop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.calc-anim { animation: calcPop .3s ease forwards; }
+
 /* ── SCROLL ANIMATIONS ──────────────────────────────── */
 .reveal {
   opacity: 0; transform: translateY(24px);
@@ -633,6 +865,7 @@ footer {
   <ul class="nav-links">
     <li><a href="#solution">Serviços</a></li>
     <li><a href="#plans">Planos</a></li>
+    <li><a href="#calculator">Calculadora</a></li>
     <li><a href="#niches">Nichos</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
@@ -653,6 +886,7 @@ footer {
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.5 8h9M8 3.5L12.5 8 8 12.5"/></svg>
       </a>
       <a href="#plans" class="btn-secondary">Ver planos e preços</a>
+      <a href="#calculator" class="btn-secondary">Calcular minha perda →</a>
     </div>
     <div class="hero-numbers">
       <div class="hero-num">
@@ -938,12 +1172,200 @@ footer {
   </div>
 </section>
 
+<!-- CALCULATOR -->
+<section class="calc-section reveal" id="calculator">
+  <div class="section-label">Calculadora de ROI</div>
+  <h2 class="section-title">Quanto você está perdendo<br>todo mês sem saber?</h2>
+  <p class="section-sub">Preencha os dados do seu negócio e veja em reais o impacto de cada mensagem sem resposta.</p>
+
+  <div class="calc-main-grid">
+
+    <!-- INPUTS -->
+    <div class="calc-inputs">
+      <div class="calc-card-title">Dados do seu negócio</div>
+
+      <div class="calc-field">
+        <label>Tipo de negócio</label>
+        <select class="calc-select" id="c_nicho" onchange="calcROI()">
+          <option value="clinica">Clínica / Consultório</option>
+          <option value="salao">Salão de Beleza / Barbearia</option>
+          <option value="academia">Academia / Personal Trainer</option>
+          <option value="imobiliaria">Imobiliária</option>
+          <option value="restaurante">Restaurante / Delivery</option>
+          <option value="outro">Outro serviço</option>
+        </select>
+      </div>
+
+      <div class="calc-field">
+        <label>Mensagens e contatos por dia <span class="calc-hint">média</span></label>
+        <div class="calc-slider-row">
+          <input type="range" class="calc-range" id="c_contatos" min="3" max="80" value="15" step="1"
+            oninput="syncC(this,'c_contatos_v');calcROI()">
+          <span class="calc-slider-val" id="c_contatos_v">15</span>
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label>% sem resposta em até 1 hora <span class="calc-hint">estimativa honesta</span></label>
+        <div class="calc-slider-row">
+          <input type="range" class="calc-range" id="c_semresp" min="5" max="70" value="30" step="5"
+            oninput="syncC(this,'c_semresp_v',true);calcROI()">
+          <span class="calc-slider-val" id="c_semresp_v">30%</span>
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label>Ticket médio por cliente <span class="calc-hint">R$</span></label>
+        <div class="calc-input-wrap">
+          <span class="calc-prefix">R$</span>
+          <input type="number" class="calc-input-num" id="c_ticket" value="180" min="30" max="5000" step="10" oninput="calcROI()">
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label>Taxa de conversão de leads <span class="calc-hint">% que viram clientes</span></label>
+        <div class="calc-slider-row">
+          <input type="range" class="calc-range" id="c_conv" min="5" max="80" value="35" step="5"
+            oninput="syncC(this,'c_conv_v',true);calcROI()">
+          <span class="calc-slider-val" id="c_conv_v">35%</span>
+        </div>
+      </div>
+
+      <div class="calc-field">
+        <label>Frequência de retorno do cliente</label>
+        <select class="calc-select" id="c_freq" onchange="calcROI()">
+          <option value="1">1x ao ano</option>
+          <option value="2">2x ao ano</option>
+          <option value="4" selected>4x ao ano (trimestral)</option>
+          <option value="6">6x ao ano (bimestral)</option>
+          <option value="12">12x ao ano (mensal)</option>
+        </select>
+      </div>
+
+      <div class="calc-field">
+        <label>Dias de funcionamento por mês</label>
+        <div class="calc-slider-row">
+          <input type="range" class="calc-range" id="c_dias" min="10" max="30" value="22" step="1"
+            oninput="syncC(this,'c_dias_v',false,true);calcROI()">
+          <span class="calc-slider-val" id="c_dias_v">22 dias</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="calc-results" id="calcResults">
+      <div class="calc-card-title">Resultado do diagnóstico</div>
+
+      <div class="calc-loss-block">
+        <div class="calc-loss-eyebrow">Receita perdida por mês</div>
+        <div class="calc-loss-num" id="c_perda_mensal">R$ 0</div>
+        <div class="calc-loss-year" id="c_perda_anual">R$ 0 por ano</div>
+      </div>
+
+      <div class="calc-rows">
+        <div class="calc-row">
+          <div>
+            <div class="calc-row-label">Leads perdidos por mês</div>
+            <div class="calc-row-sub">sem resposta em até 1h</div>
+          </div>
+          <div class="calc-row-val neg" id="c_leads">—</div>
+        </div>
+        <div class="calc-row">
+          <div>
+            <div class="calc-row-label">Clientes perdidos por mês</div>
+            <div class="calc-row-sub">pela taxa de conversão</div>
+          </div>
+          <div class="calc-row-val neg" id="c_clientes">—</div>
+        </div>
+        <div class="calc-row">
+          <div>
+            <div class="calc-row-label">Receita recuperada c/ Agenvia</div>
+            <div class="calc-row-sub">~75% dos contatos respondidos</div>
+          </div>
+          <div class="calc-row-val pos" id="c_rec">—</div>
+        </div>
+      </div>
+
+      <div class="calc-roi-box">
+        <div class="calc-roi-label">ROI estimado no 1º mês</div>
+        <div class="calc-roi-num" id="c_roi">—</div>
+        <div class="calc-roi-sub" id="c_roi_sub">para cada R$1 investido</div>
+      </div>
+
+      <div class="calc-plan" id="c_plan">
+        <div class="calc-plan-label">Plano recomendado</div>
+        <div class="calc-plan-name" id="c_plan_nome">—</div>
+        <div class="calc-plan-why" id="c_plan_why">—</div>
+      </div>
+
+      <div class="calc-payback">
+        ⏱ Payback estimado: <strong id="c_payback">—</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEAD FORM -->
+  <div class="calc-form-wrap">
+    <div class="calc-form-header">
+      <div>
+        <h3>Receba o diagnóstico<br>completo pelo WhatsApp</h3>
+        <p>Com o número exato da sua perda e o plano ideal para resolver.</p>
+      </div>
+      <div class="calc-form-badge">🎯 Gratuito<br>Sem compromisso</div>
+    </div>
+    <div class="calc-form-body" id="calcFormBody">
+      <div class="calc-form-grid">
+        <div class="cff">
+          <label>Seu nome *</label>
+          <input type="text" id="cf_nome" placeholder="João Silva">
+        </div>
+        <div class="cff">
+          <label>Nome do negócio</label>
+          <input type="text" id="cf_negocio" placeholder="Clínica Exemplo">
+        </div>
+        <div class="cff">
+          <label>WhatsApp *</label>
+          <input type="tel" id="cf_tel" placeholder="(51) 99999-9999">
+        </div>
+        <div class="cff">
+          <label>Cidade</label>
+          <input type="text" id="cf_cidade" placeholder="Porto Alegre">
+        </div>
+        <div class="cff">
+          <label>E-mail</label>
+          <input type="email" id="cf_email" placeholder="voce@empresa.com.br">
+        </div>
+        <div class="cff">
+          <label>Melhor horário para contato</label>
+          <select id="cf_horario">
+            <option>Manhã (8h–12h)</option>
+            <option>Tarde (12h–17h)</option>
+            <option selected>Qualquer horário</option>
+          </select>
+        </div>
+      </div>
+      <div class="calc-submit-row">
+        <button class="calc-btn-submit" onclick="enviarCalc()">
+          Receber meu diagnóstico gratuito
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <span class="calc-privacy">🔒 Entraremos em contato em até 2h. Sem spam.</span>
+      </div>
+      <div class="calc-success" id="calcSuccess">
+        <div class="calc-success-icon">✅</div>
+        <h4>Diagnóstico enviado!</h4>
+        <p>Entraremos em contato pelo WhatsApp em até 2 horas com o relatório completo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA FINAL -->
 <section class="cta-final" id="cta">
   <h2 class="section-title">Pronto para nunca mais<br>perder um cliente?</h2>
   <p class="section-sub">Diagnóstico gratuito de 20 minutos. Sem compromisso, sem tecnicidade.</p>
   <div class="cta-final-actions">
-    <a href="https://wa.me/5551995090036?text=Oi%2C+quero+fazer+o+diagn%C3%B3stico+gratuito+da+Agenvia" class="btn-white">
+    <a href="https://wa.me/5551999999999?text=Oi%2C+quero+fazer+o+diagn%C3%B3stico+gratuito+da+Agenvia" class="btn-white">
       Agendar diagnóstico gratuito →
     </a>
     <a href="mailto:contato@agenvia.com.br" class="btn-ghost">Enviar e-mail</a>
@@ -957,6 +1379,7 @@ footer {
   <div class="footer-links">
     <a href="#solution">Serviços</a>
     <a href="#plans">Planos</a>
+    <a href="#calculator">Calculadora</a>
     <a href="#niches">Nichos</a>
     <a href="#faq">FAQ</a>
     <a href="mailto:contato@agenvia.com.br">contato@agenvia.com.br</a>
@@ -1021,7 +1444,90 @@ document.querySelectorAll('.faq-q').forEach(btn => {
   });
 });
 
-// ── SMOOTH ANCHOR ────────────────────────────────────
+// ── CALCULATOR ───────────────────────────────────────
+function syncC(el, labelId, isPct, isDias) {
+  const v = el.value;
+  const label = document.getElementById(labelId);
+  label.textContent = isPct ? v + '%' : isDias ? v + ' dias' : v;
+  const min = +el.min, max = +el.max;
+  const pct = ((v - min) / (max - min)) * 100;
+  el.style.setProperty('--pct', pct + '%');
+}
+// init sliders
+[['c_contatos','c_contatos_v',false,false],['c_semresp','c_semresp_v',true,false],
+ ['c_conv','c_conv_v',true,false],['c_dias','c_dias_v',false,true]].forEach(([id,vid,p,d])=>{
+  const el = document.getElementById(id);
+  if(el) syncC(el,vid,p,d);
+});
+
+function fmtMoney(n) {
+  if(n>=1000000) return 'R$ '+(n/1000000).toFixed(1).replace('.',',')+' M';
+  if(n>=1000)    return 'R$ '+(n/1000).toFixed(1).replace('.',',')+' mil';
+  return 'R$ '+Math.round(n).toLocaleString('pt-BR');
+}
+function getPlano(perda) {
+  if(perda < 3000) return { nome:'🥉 Bronze — R$1.200/mês', custo:1200, why:'Resolve o problema mais urgente: nenhum lead se perde por falta de resposta. Payback rápido e risco zero.' };
+  if(perda < 8000) return { nome:'🥈 Prata — R$3.000/mês', custo:3000, why:'Com essa perda mensal, o bot de agendamento e a gestão de marketing se pagam no primeiro mês.' };
+  return { nome:'🥇 Ouro — R$7.000/mês', custo:7000, why:'Volume alto de leads. O Ouro com RAG, AI Caller e BI vai maximizar cada oportunidade disponível.' };
+}
+function calcROI() {
+  const contatos  = +document.getElementById('c_contatos').value;
+  const pctSem    = +document.getElementById('c_semresp').value / 100;
+  const ticket    = +document.getElementById('c_ticket').value || 0;
+  const pctConv   = +document.getElementById('c_conv').value / 100;
+  const freq      = +document.getElementById('c_freq').value;
+  const dias      = +document.getElementById('c_dias').value;
+
+  const mes       = contatos * dias;
+  const perdidos  = Math.round(mes * pctSem);
+  const clientes  = perdidos * pctConv;
+  const ltv       = ticket * freq;
+  const perda     = clientes * ltv;
+  const anual     = perda * 12;
+  const rec       = perda * 0.75;
+  const plano     = getPlano(perda);
+  const roi       = plano.custo > 0 ? rec / plano.custo : 0;
+  const payD      = rec > 0 ? Math.round(plano.custo / (rec / 30)) : 0;
+
+  document.getElementById('c_perda_mensal').textContent = fmtMoney(perda);
+  document.getElementById('c_perda_anual').textContent  = fmtMoney(anual) + ' por ano';
+  document.getElementById('c_leads').textContent        = Math.round(perdidos) + ' leads';
+  document.getElementById('c_clientes').textContent     = Math.round(clientes) + ' clientes';
+  document.getElementById('c_rec').textContent          = '+' + fmtMoney(rec) + '/mês';
+  document.getElementById('c_roi').textContent          = roi > 0 ? roi.toFixed(1) + 'x' : '—';
+  document.getElementById('c_roi_sub').textContent      = roi > 0 ? 'para cada R$1 investido, retorna R$'+roi.toFixed(1) : 'preencha os dados';
+  document.getElementById('c_plan_nome').textContent    = plano.nome;
+  document.getElementById('c_plan_why').textContent     = plano.why;
+  document.getElementById('c_payback').textContent      = payD > 0 ? (payD <= 30 ? payD+' dias' : Math.round(payD/30)+' meses') : '—';
+
+  const el = document.getElementById('c_perda_mensal');
+  el.classList.remove('calc-anim'); void el.offsetWidth; el.classList.add('calc-anim');
+}
+function enviarCalc() {
+  const nome = document.getElementById('cf_nome').value.trim();
+  const tel  = document.getElementById('cf_tel').value.trim();
+  if(!nome){ alert('Por favor informe seu nome.'); return; }
+  if(!tel){  alert('Por favor informe seu WhatsApp.'); return; }
+  const neg     = document.getElementById('cf_negocio').value.trim() || 'meu negócio';
+  const cidade  = document.getElementById('cf_cidade').value.trim();
+  const email   = document.getElementById('cf_email').value.trim();
+  const horario = document.getElementById('cf_horario').value;
+  const perda   = document.getElementById('c_perda_mensal').textContent;
+  const plano   = document.getElementById('c_plan_nome').textContent;
+  const nicho   = document.getElementById('c_nicho').options[document.getElementById('c_nicho').selectedIndex].text;
+  const msg = encodeURIComponent(
+    `Olá! Fiz a calculadora da Agenvia e quero o diagnóstico gratuito.\n\n`+
+    `Nome: ${nome}\nNegócio: ${neg} (${nicho})\n`+
+    (cidade?`Cidade: ${cidade}\n`:'')+
+    (email?`E-mail: ${email}\n`:'')+
+    `Horário: ${horario}\n\n`+
+    `Resultado da calculadora:\n• Perda estimada: ${perda}/mês\n• Plano recomendado: ${plano}`
+  );
+  document.getElementById('calcFormBody').classList.add('sent');
+  document.getElementById('calcSuccess').classList.add('show');
+  setTimeout(()=>{ window.open(`https://wa.me/5551999999999?text=${msg}`,'_blank'); }, 700);
+}
+calcROI();
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
     const target = document.querySelector(a.getAttribute('href'));
